@@ -1,0 +1,19 @@
+//
+//  PrefixHeader.pch
+//  BaseProject
+//
+//  Created by 意一yiyi on 2017/8/18.
+//  Copyright © 2017年 意一yiyi. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#import "Base_NotChange.h"
+#import "Project_CanChange.h"
+#import "Category_CanChange.h"
+#import "Third_CanChange.h"
+#import "Macro_CanChange.h"
+#import "Macro_NotChange.h"
+
+#endif /* PrefixHeader_pch */
