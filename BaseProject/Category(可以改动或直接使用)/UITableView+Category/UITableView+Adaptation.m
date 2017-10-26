@@ -21,7 +21,7 @@
     }
     
     // 避免不实现 (-tableView: viewForFooterInSection:) 和 (-tableView: viewForHeaderInSection:) 方法导致 (_tableView: heightForHeaderInSection:) 和 (-tableView: heightForFooterInSection:) 不被调用
-    self.estimatedRowHeight = 0;
+    self.estimatedRowHeight = 44;
     self.estimatedSectionHeaderHeight = 0;
     self.estimatedSectionFooterHeight = 0;
 }

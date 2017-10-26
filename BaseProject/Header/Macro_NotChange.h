@@ -43,9 +43,9 @@
 //=========== 字体适配 ===========//
 #define kSuitedFontSize(fontSize) (kDevice_is_iPhone6Plus ? (fontSize + 1.0) : (fontSize))// 这里暂时选用 plus 比其它机型的字体大一号的做法
 
-#define kFirstLevelFontSize 16.0
-#define kSecondLevelFontSize 14.0
-#define kThirdLevelFontSize 12.0
+#define kFirstLevelFontSize kSuitedFontSize(16.0)
+#define kSecondLevelFontSize kSuitedFontSize(14.0)
+#define kThirdLevelFontSize kSuitedFontSize(12.0)
 
 #define kFirstLevelTextColor kColorWithRGB(54, 54, 54, 1)
 #define kSecondLevelTextColor kColorWithRGB(81, 81, 81, 1)
@@ -79,5 +79,10 @@
 #define kWindow [UIApplication sharedApplication].keyWindow
 #define kNSUserDefaults [NSUserDefaults standardUserDefaults]
 #define kNSNotificationCenter [NSNotificationCenter defaultCenter]
+
+
+//=========== 判断字符串是否为空 ===========//
+// 注意 : 之所以不通过给 NSString 添加分类的方法来显示, 而采用此处的宏, 是因为如果 str == nil 或者 str == NULL, 它根本就不是一个 NSString 类型, 所以就不会走 NSString 的分类方法, 会判断失败. 所以使用 NSString 正则表达式判断那个分类, 应该先判断是否为空之后再使用
+#define kStringIsEmpty(string) (string.length == 0 || [string isEqualToString:@"<null>"] || [string isEqualToString:@"(null)"] || [string isEqualToString:@"NULL"] || string == nil || string == NULL || [string isKindOfClass:[NSNull class]])
 
 #endif /* Macro_NotChange_h */

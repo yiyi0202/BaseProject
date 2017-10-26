@@ -47,7 +47,11 @@
         
         self.overLayer = [[UIView alloc] init];
         self.overLayer.frame = CGRectMake(0, 0, kScreenWidth, kNavigationBarHeight);
-        [self.subviews[0] insertSubview:self.overLayer atIndex:0];
+        
+        if (self.subviews.count != 0) {
+            
+            [self.subviews[0] insertSubview:self.overLayer atIndex:0];
+        }
     }
     
     self.overLayer.backgroundColor = barTintColor;

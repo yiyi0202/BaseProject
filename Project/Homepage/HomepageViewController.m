@@ -9,6 +9,7 @@
 #import "HomepageViewController.h"
 #import "LiveViewController.h"
 #import "MineViewController.h"
+#import "Person.h"
 
 @interface HomepageViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -39,12 +40,10 @@
 #pragma mark - UIScrollView Delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
+
     [self setNeedsStatusBarAppearanceUpdate];
     CGFloat offsetY = scrollView.contentOffset.y;
     self.scrollScale = (offsetY - kNavigationBarHeight) / kNavigationBarHeight;// 滑动一个导航栏的距离开始显示, 再滑动一个导航栏的距离就全部显示出来
-    
-    NSLog(@"%f", self.scrollScale);
     
     if (self.scrollScale < 0) {
         

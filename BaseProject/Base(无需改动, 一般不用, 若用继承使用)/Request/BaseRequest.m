@@ -45,8 +45,9 @@ static BaseRequest *request = nil;
         notReachableLabel.textAlignment = NSTextAlignmentCenter;
         
         [kWindow addSubview:notReachableLabel];
+        [kWindow bringSubviewToFront:notReachableLabel];
         notReachableLabel.hidden = YES;
-        notReachableLabel.frame = CGRectMake(0, 20, kScreenWidth, 0);
+        notReachableLabel.frame = CGRectMake(0, kStatusBarHeight, kScreenWidth, 0);
         
         [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
             
@@ -58,7 +59,7 @@ static BaseRequest *request = nil;
                     
                     [UIView animateWithDuration:0.25 animations:^{
                         
-                        notReachableLabel.frame = CGRectMake(0, 20, kScreenWidth, 44);
+                        notReachableLabel.frame = CGRectMake(0, kStatusBarHeight, kScreenWidth, kNavigationBarHeight - kStatusBarHeight);
                         [kWindow layoutIfNeeded];
                     }];
                 }
@@ -68,7 +69,7 @@ static BaseRequest *request = nil;
                 {
                     [UIView animateWithDuration:0.25 animations:^{
                         
-                        notReachableLabel.frame = CGRectMake(0, 20, kScreenWidth, 0);
+                        notReachableLabel.frame = CGRectMake(0, kStatusBarHeight, kScreenWidth, 0);
                         [kWindow layoutIfNeeded];
                     }];
                     

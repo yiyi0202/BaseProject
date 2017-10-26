@@ -31,19 +31,27 @@
 // 开始请求
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(null_unspecified WKNavigation *)navigation {
     
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+    button.center = self.view.center;
+    button.backgroundColor = [UIColor redColor];
+    [button addTarget:self action:@selector(reloadWebView) forControlEvents:(UIControlEventTouchUpInside)];
+    [self.view addSubview:button];
+}
+- (void)reloadWebView {
     
+    [self.webView stopLoading];
 }
 
 // 请求完成
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
     
-    
+
 }
 
 // 请求失败
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error {
     
-    
+
 }
 
 

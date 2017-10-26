@@ -9,7 +9,8 @@
 #ifndef UICollectionView_Category_h
 #define UICollectionView_Category_h
 
-#import "UICollectionView+PromptImageView.h"
+#import "UICollectionView+Refresh.h"
 #import "UICollectionView+Adaptation.h"
+#import "UICollectionView+PromptImageView.h"
 
 #endif /* UICollectionView_Category_h */

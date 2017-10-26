@@ -8,7 +8,7 @@
 
 #import "MineViewController.h"
 
-@interface MineViewController ()<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
+@interface MineViewController ()<UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) UIView *tableHeaderView;
@@ -16,14 +16,7 @@
 @property (strong, nonatomic) NSArray<NSString *> *titleArray;
 @property (strong, nonatomic) NSArray<NSString *> *vcArray;
 
-
-// 头像相关
-@property (strong, nonatomic) UIImagePickerController *imgPickerController;
-@property (strong, nonatomic) UIImagePickerController *coverImgPickerController;
-@property (assign, nonatomic) BOOL isPhotoAlbum;
-@property (strong, nonatomic) UIImage *selectedImg;// 从相册选取或者拍照后选取的照片, 如果有值说明是编辑了, 否则就是非编辑
-@property (strong, nonatomic) UIImage *selectedCoverImg;// 封面
-// 头像相关
+@property (strong, nonatomic) UILabel *label;
 
 @end
 
@@ -34,6 +27,14 @@
     
     [self initialize];
     [self layoutUI];
+}
+
+
+#pragma mark - request
+
+- (void)fetchData {
+    
+    NSLog(@"%ld", self.tableView.refreshPage);
 }
 
 
@@ -67,7 +68,13 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    
+    if (indexPath.section == 0) {
+        
+        [self.tableView yy_endRefreshingHeader];
+    }else {
+        
+        [self.tableView yy_endRefreshingFooter];
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
@@ -93,10 +100,12 @@
         _tableView.delegate = self;
         [_tableView yy_Adapt_iOS11];
 
-        
         _tableView.tableHeaderView = self.tableHeaderView;
         
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cellReuseID"];
+        
+        [_tableView yy_addRefreshHeaderWithStyle:(ProjectRefreshHeaderStyle_Gif_StateLabel_TimeLabel) refreshingTarget:self refreshingAction:@selector(fetchData)];
+        [_tableView yy_addRefreshFooterWithStyle:(ProjectRefreshFooterStyleStyle_Arrow_StateLabel) refreshingTarget:self refreshingAction:@selector(fetchData)];
     }
     
     return _tableView;
@@ -116,68 +125,20 @@
         imageView.layer.masksToBounds = YES;
         imageView.userInteractionEnabled = YES;
         [_tableHeaderView addSubview:imageView];
-        
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
-        [imageView addGestureRecognizer:tap];
     }
     
     return _tableHeaderView;
 }
 
-- (void)tap {
+- (UILabel *)label {
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:(UIAlertControllerStyleActionSheet)];
-    UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"从相册选取" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+    if (_label == NULL) {
         
-        self.isPhotoAlbum = YES;
-        [self presentViewController:self.imgPickerController animated:YES completion:nil];
-    }];
-    UIAlertAction *videoAction = [UIAlertAction actionWithTitle:@"拍照" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
-        
-        self.isPhotoAlbum = NO;
-        [self presentViewController:self.imgPickerController animated:YES completion:nil];
-    }];
-    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:(UIAlertActionStyleCancel) handler:nil];
-    
-    [alertController addAction:videoAction];
-    [alertController addAction:photoAction];
-    [alertController addAction:cancelAction];
-    
-    [self presentViewController:alertController animated:YES completion:nil];
-}
-
-- (UIImagePickerController *)imgPickerController {
-    
-    if ([UIImagePickerController isSourceTypeAvailable:(UIImagePickerControllerSourceTypeSavedPhotosAlbum)]) {
-        
-        if (!_imgPickerController) {
-            
-            _imgPickerController = [[UIImagePickerController alloc] init];
-            _imgPickerController.delegate = self;
-            _imgPickerController.allowsEditing = YES;
-            _imgPickerController.mediaTypes = @[@"public.image"];
-        }
-        
-        if (self.isPhotoAlbum) {
-            
-            _imgPickerController.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
-        }else{
-            
-            _imgPickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
-            _imgPickerController.cameraDevice = UIImagePickerControllerCameraDeviceRear;
-            _imgPickerController.cameraCaptureMode = UIImagePickerControllerCameraCaptureModePhoto;
-        }
-        
-        return _imgPickerController;
-    }else{
-        
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您的设备不支持此功能!" preferredStyle:(UIAlertControllerStyleAlert)];
-        UIAlertAction *defaltAction = [UIAlertAction actionWithTitle:@"确认" style:(UIAlertActionStyleDefault) handler:nil];
-        [alertController addAction:defaltAction];
-        [self presentViewController:alertController animated:YES completion:nil];
-        
-        return nil;
+        _label = [[UILabel alloc] init];
+        _label.backgroundColor = [UIColor magentaColor];        
     }
+    
+    return _label;
 }
 
 
@@ -191,6 +152,9 @@
     // view
     [self.view addSubview:self.tableView];
     self.tableView.frame = CGRectMake(0, kNavigationBarHeight, kScreenWidth, kScreenHeight - kNavigationBarHeight - kTabBarHeight);
+    
+    [self.view addSubview:self.label];
+    self.label.frame = CGRectMake(0, 382, kScreenWidth, 50);
 }
 
 
@@ -207,15 +171,5 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

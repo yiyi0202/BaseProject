@@ -9,7 +9,8 @@
 #ifndef UITableView_Category_h
 #define UITableView_Category_h
 
-#import "UITableView+PromptImageView.h"
+#import "UITableView+Refresh.h"
 #import "UITableView+Adaptation.h"
+#import "UITableView+PromptImageView.h"
 
 #endif /* UITableView_Category_h */

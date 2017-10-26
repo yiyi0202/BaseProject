@@ -303,6 +303,7 @@
         _webView.navigationDelegate = self;
         _webView.UIDelegate = self;
         
+        _webView.scrollView.backgroundColor = [UIColor clearColor];
         _webView.scrollView.showsHorizontalScrollIndicator = NO;
         _webView.scrollView.showsVerticalScrollIndicator = YES;
         
