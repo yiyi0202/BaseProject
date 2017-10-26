@@ -1,34 +1,24 @@
 //
-//  LiveViewController.m
+//  ServiceViewController.m
 //  BaseProject
 //
-//  Created by 意一yiyi on 2017/8/18.
+//  Created by 意一yiyi on 2017/10/26.
 //  Copyright © 2017年 意一yiyi. All rights reserved.
 //
 
-#import "LiveViewController.h"
+#import "ServiceViewController.h"
 
-@interface LiveViewController ()
+@interface ServiceViewController ()
 
 @end
 
-@implementation LiveViewController
+@implementation ServiceViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    [self layoutUI];
-}
-
-
-#pragma mark - layoutUI
-
-- (void)layoutUI {
     
-    // 导航栏
     self.navigationItem.title = @"客服";
 }
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

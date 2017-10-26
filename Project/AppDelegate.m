@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import "HomepageViewController.h"
-#import "LiveViewController.h"
 #import "MineViewController.h"
 
 @interface AppDelegate ()<ProjectTabBarControllerDelegate>
@@ -26,7 +25,7 @@
     [self.window makeKeyAndVisible];
     
 //    ProjectTabBarController *tabBarController = [[ProjectTabBarController alloc] initWithViewControllers:@[[HomepageViewController new], [MineViewController new]] titles:nil imageNames:@[@"homepage", @"mine"] selectedImageNames:@[@"homepage_selected", @"mine_selected"] delegate:self centerButtonSize:CGSizeMake(61, 61) centerButtonOffset:-24 centerButtonImageName:@"live" animated:YES];
-    ProjectTabBarController *tabBarController = [[ProjectTabBarController alloc] initWithViewControllers:@[[HomepageViewController new], [MineViewController new], [HomepageViewController new], [MineViewController new]] titles:nil imageNames:@[@"homepage", @"mine", @"homepage", @"mine"] selectedImageNames:@[@"homepage_selected", @"mine_selected", @"homepage_selected", @"mine_selected"] animated:NO];
+    ProjectTabBarController *tabBarController = [[ProjectTabBarController alloc] initWithViewControllers:@[[HomepageViewController new], [MineViewController new]] titles:nil imageNames:@[@"homepage", @"mine"] selectedImageNames:@[@"homepage_selected", @"mine_selected"] animated:NO];
     
     [self.window setRootViewController:tabBarController];
     

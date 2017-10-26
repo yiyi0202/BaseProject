@@ -7,9 +7,7 @@
 //
 
 #import "HomepageViewController.h"
-#import "LiveViewController.h"
-#import "MineViewController.h"
-#import "Person.h"
+#import "ServiceViewController.h"
 
 @interface HomepageViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -113,7 +111,7 @@
 
 - (void)leftBarButtonItemAction:(UIBarButtonItem *)leftBarButtonItem {
     
-    LiveViewController *vc = [[LiveViewController alloc] init];
+    ServiceViewController *vc = [[ServiceViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 

@@ -104,7 +104,7 @@
         
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cellReuseID"];
         
-        [_tableView yy_addRefreshHeaderWithStyle:(ProjectRefreshHeaderStyle_Gif_StateLabel_TimeLabel) refreshingTarget:self refreshingAction:@selector(fetchData)];
+        [_tableView yy_addRefreshHeaderWithStyle:(ProjectRefreshHeaderStyle_Arrow_StateLabel) refreshingTarget:self refreshingAction:@selector(fetchData)];
         [_tableView yy_addRefreshFooterWithStyle:(ProjectRefreshFooterStyleStyle_Arrow_StateLabel) refreshingTarget:self refreshingAction:@selector(fetchData)];
     }
     
@@ -135,7 +135,9 @@
     if (_label == NULL) {
         
         _label = [[UILabel alloc] init];
-        _label.backgroundColor = [UIColor magentaColor];        
+        _label.backgroundColor = [UIColor magentaColor];
+        
+        _label.attributedText = [@"你好呀1你好呀2你好呀3你好呀4你好呀5" yy_changeToAttributedStringWithTextArray:@[@"你", @"呀"] textColor:[UIColor greenColor] fontSize:(20) deletelineColor:[UIColor yellowColor]];
     }
     
     return _label;

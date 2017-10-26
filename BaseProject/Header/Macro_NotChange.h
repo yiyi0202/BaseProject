@@ -43,9 +43,9 @@
 //=========== 字体适配 ===========//
 #define kSuitedFontSize(fontSize) (kDevice_is_iPhone6Plus ? (fontSize + 1.0) : (fontSize))// 这里暂时选用 plus 比其它机型的字体大一号的做法
 
-#define kFirstLevelFontSize kSuitedFontSize(16.0)
-#define kSecondLevelFontSize kSuitedFontSize(14.0)
-#define kThirdLevelFontSize kSuitedFontSize(12.0)
+#define kFirstLevelFontSize 16.0
+#define kSecondLevelFontSize 14.0
+#define kThirdLevelFontSize 12.0
 
 #define kFirstLevelTextColor kColorWithRGB(54, 54, 54, 1)
 #define kSecondLevelTextColor kColorWithRGB(81, 81, 81, 1)

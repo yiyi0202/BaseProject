@@ -60,6 +60,10 @@ typedef NS_ENUM(NSInteger, NormalHeaderStyle) {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"HH:mm";
         NSString *time = [formatter stringFromDate:lastUpdatedTime];
+        if (kStringIsEmpty(time)) {
+            
+            time = @"无记录";
+        }
         return time;
     };
 }
@@ -117,6 +121,12 @@ typedef NS_ENUM(NSInteger, NormalHeaderStyle) {
     
     self.stateLabel.hidden = NO;
     self.lastUpdatedTimeLabel.hidden = NO;
+    
+    if ([self.lastUpdatedTimeLabel.text isEqualToString:@"最后更新：无记录"]) {
+
+        self.lastUpdatedTimeLabel.text = @"无记录";
+    }
+    
     if (self.lastUpdatedTimeLabel.text.length == 13) {
         
         self.lastUpdatedTimeLabel.text = [self.lastUpdatedTimeLabel.text substringFromIndex:8];
@@ -141,7 +151,6 @@ typedef NS_ENUM(NSInteger, GifHeaderStyle) {
 @interface GifHeader : MJRefreshGifHeader
 
 @property (assign, nonatomic) GifHeaderStyle style;
-@property (copy,   nonatomic) NSString *time;
 
 @end
 
@@ -181,14 +190,15 @@ typedef NS_ENUM(NSInteger, GifHeaderStyle) {
     [self setTitle:@"加载中..." forState:(MJRefreshStateRefreshing)];
     
     // timeLabel
-    __weak typeof(self) weakSelf = self;
     self.lastUpdatedTimeText = ^NSString *(NSDate *lastUpdatedTime) {
         
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.dateFormat = @"HH:mm";
         NSString *time = [formatter stringFromDate:lastUpdatedTime];
-        
-        weakSelf.time = time;
+        if (kStringIsEmpty(time)) {
+            
+            time = @"无记录";
+        }
         return time;
     };
 }
@@ -268,6 +278,12 @@ typedef NS_ENUM(NSInteger, GifHeaderStyle) {
     
     self.stateLabel.hidden = NO;
     self.lastUpdatedTimeLabel.hidden = NO;
+    
+    if ([self.lastUpdatedTimeLabel.text isEqualToString:@"最后更新：无记录"]) {
+        
+        self.lastUpdatedTimeLabel.text = @"无记录";
+    }
+    
     if (self.lastUpdatedTimeLabel.text.length == 13) {
         
         self.lastUpdatedTimeLabel.text = [self.lastUpdatedTimeLabel.text substringFromIndex:8];
