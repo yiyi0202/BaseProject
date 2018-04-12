@@ -38,8 +38,6 @@
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wundeclared-selector"
-    // 默认的导航栏控制器配置
-    [self performSelector:@selector(defaultNavigationControllerConfiguration)];
 
     // 默认的导航栏配置
     [self performSelector:@selector(defaultNavigationBarConfiguration)];
@@ -63,6 +61,12 @@
 - (void)yy_viewDidAppear:(BOOL)animated {
     
     [self yy_viewDidAppear:animated];
+    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
+    // 导航栏控制器默认配置
+    [self performSelector:@selector(defaultNavigationControllerConfiguration)];
+#pragma clang diagnostic pop
     
     // 导航栏默认透明度
     self.navigationBarAlpha = 1.0;

@@ -36,8 +36,12 @@
     [self yy_pushViewController:viewController animated:animated];
     
     // 本来计划把 push 和 slideBack 写成两个分类的, 但是这个 slideBack 会用到的代理的设置时机只能在 push 的时候设置, 所以只能写一块了
-    if (self.delegate != self) {
+    if ([[self class] isEqual:[UIImagePickerController class]]) {// 这里会导致UIImagePickerController选照片或拍照是不可编辑
         
+        return;
+    }
+    if (self.delegate != self) {
+
         self.delegate = self;
     }
 }
@@ -79,10 +83,14 @@
             
             if (kSystemVersion_is_iOS10OrLater) {
                 
-                [coordinator notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
-                    
-                    [self dealInteractionChanges:context];
-                }];
+                if (@available(iOS 10.0, *)) {
+                    [coordinator notifyWhenInteractionChangesUsingBlock:^(id<UIViewControllerTransitionCoordinatorContext>  _Nonnull context) {
+                        
+                        [self dealInteractionChanges:context];
+                    }];
+                } else {
+                    // Fallback on earlier versions
+                }
             }
         }
     }

@@ -131,7 +131,11 @@
     self.tabBar.tintColor = kDefaultTabBarSelectedItemTintColor;
     if (kSystemVersion_is_iOS10OrLater) {
         
-        self.tabBar.unselectedItemTintColor = kDefaultTabBarUnselectedItemTintColor;
+        if (@available(iOS 10.0, *)) {
+            self.tabBar.unselectedItemTintColor = kDefaultTabBarUnselectedItemTintColor;
+        } else {
+            // Fallback on earlier versions
+        }
     }
     
     self.selectedIndex = 0;
@@ -145,9 +149,17 @@
     self.projectTabBar.barTintColor = kDefaultTabBarTintColor;
     if (kSystemVersion_is_iOS10OrLater) {
         
-        self.projectTabBar.unselectedItemTintColor = kDefaultTabBarUnselectedItemTintColor;
+        if (@available(iOS 10.0, *)) {
+            self.projectTabBar.unselectedItemTintColor = kDefaultTabBarUnselectedItemTintColor;
+        } else {
+            // Fallback on earlier versions
+        }
     }
-    self.projectTabBar.unselectedItemTintColor = kDefaultTabBarUnselectedItemTintColor;
+    if (@available(iOS 10.0, *)) {
+        self.projectTabBar.unselectedItemTintColor = kDefaultTabBarUnselectedItemTintColor;
+    } else {
+        // Fallback on earlier versions
+    }
     self.projectTabBar.centerButtonSize = self.centerButtonSize;
     self.projectTabBar.centerButtonOffset = self.centerButtonOffset;
     self.projectTabBar.centerButtonImageName = self.centerButtonImageName;

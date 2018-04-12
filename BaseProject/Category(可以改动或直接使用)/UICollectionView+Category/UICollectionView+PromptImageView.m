@@ -34,27 +34,33 @@
 }
 
 - (BOOL)dataSourceIsEmpty {
-    
-    
+
+    // 手写输入法
+    if ([self isKindOfClass:NSClassFromString(@"UIKBCandidateCollectionView")]) {
+        
+        return NO;
+    }
+
     NSInteger sections = 1;
     
-    if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]) {
+    if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInCollectionView:)]) {
         
         sections = [self numberOfSections];
         
         if (sections == 0) {
             
             return YES;
-        }
-    }
-    
-    for (int i = 0; i < sections; i ++) {
-        
-        NSInteger rows = [self numberOfItemsInSection:i];
-        
-        if (rows != 0) {
+        }else {
             
-            return NO;
+            for (int i = 0; i < sections; i ++) {
+                
+                NSInteger rows = [self numberOfItemsInSection:i];
+                
+                if (rows != 0) {
+                    
+                    return NO;
+                }
+            }
         }
     }
     

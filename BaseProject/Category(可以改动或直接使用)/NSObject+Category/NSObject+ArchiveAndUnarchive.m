@@ -29,7 +29,7 @@
         
         // 获取该成员变量对应的值
         id value = [self valueForKey:ivarName];
-        
+
         // 归档, 就是把对象 key-value 对一对一对的 encode
         [aCoder encodeObject:value forKey:ivarName];
     }

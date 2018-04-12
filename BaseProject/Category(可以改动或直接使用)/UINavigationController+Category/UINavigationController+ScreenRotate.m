@@ -13,17 +13,17 @@
 // navigationController 会拦截其子控制器关于屏幕旋转的配置, 所以这里返回其 childViewController 的相关配置
 - (BOOL)shouldAutorotate {
     
-    return self.topViewController.shouldAutorotate;
+    return self.visibleViewController.shouldAutorotate;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     
-    return self.topViewController.supportedInterfaceOrientations;
+    return self.visibleViewController.supportedInterfaceOrientations;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     
-    return self.topViewController.preferredInterfaceOrientationForPresentation;
+    return self.visibleViewController.preferredInterfaceOrientationForPresentation;
 }
 
 @end

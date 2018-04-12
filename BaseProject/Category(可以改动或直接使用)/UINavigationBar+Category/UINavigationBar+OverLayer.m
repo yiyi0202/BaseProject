@@ -51,6 +51,7 @@
         if (self.subviews.count != 0) {
             
             [self.subviews[0] insertSubview:self.overLayer atIndex:0];
+            self.overLayer.layer.zPosition = 1;
         }
     }
     

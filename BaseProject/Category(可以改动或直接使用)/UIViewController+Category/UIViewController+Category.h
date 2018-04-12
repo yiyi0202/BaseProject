@@ -7,7 +7,7 @@
 //
 
 //==============================================================================//
-//主要看下 NavigationController.h 和 UIViewController+NavigationBar.h 就可以了, 看下扩展的属性和方法怎么使用, 别的都是一些配置
+//主要看下 UIViewController+NavigationController.h 和 UIViewController+NavigationBar.h 就可以了, 看下扩展的属性和方法怎么使用, 别的都是一些配置
 //==============================================================================//
 
 #ifndef UIViewController_Category_h

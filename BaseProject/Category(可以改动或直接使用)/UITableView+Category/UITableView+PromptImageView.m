@@ -64,10 +64,23 @@
 // 判断 tableView 的数据源是否为空
 - (BOOL)dataSourceIsEmpty {
     
-    // 获取分区数(如果外界没有实现 numberOfSectionsInTableView:, 那么分区数默认 1 个)
-    NSInteger sections = 1;
+    // 键盘切换输入法的那个tableView
+    if ([self isKindOfClass:NSClassFromString(@"UIInputSwitcherTableView")]) {
+        
+        return NO;
+    }
     
+    // pickerView
+    if ([self isKindOfClass:NSClassFromString(@"UIPickerTableView")]) {
+        
+        return NO;
+    }
+    
+    // tableView
     if ([self.dataSource respondsToSelector:@selector(numberOfSectionsInTableView:)]) {
+        
+        // 获取分区数(如果外界没有实现 numberOfSectionsInTableView:, 那么分区数默认 1 个)
+        NSInteger sections = 1;
         
         sections = [self numberOfSections];
         
@@ -75,19 +88,20 @@
         if (sections == 0) {
             
             return YES;
-        }
-    }
-    
-    // 获取分区的行数
-    for (int i = 0; i < sections; i ++) {
-        
-        // 此处 i 即为当前分区
-        NSInteger rows = [self numberOfRowsInSection:i];
-        
-        // 如果其中任意一个分区的数据不为空, 那就返回 NO
-        if (rows != 0) {
+        }else {
             
-            return NO;
+            // 获取分区的行数
+            for (int i = 0; i < sections; i ++) {
+                
+                // 此处 i 即为当前分区
+                NSInteger rows = [self numberOfRowsInSection:i];
+                
+                // 如果其中任意一个分区的数据不为空, 那就返回 NO
+                if (rows != 0) {
+                    
+                    return NO;
+                }
+            }
         }
     }
     

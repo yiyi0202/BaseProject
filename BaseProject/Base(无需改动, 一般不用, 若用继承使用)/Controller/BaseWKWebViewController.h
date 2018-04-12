@@ -30,4 +30,10 @@
  */
 - (NSString *)generateJSObjectWithDictionary:(NSDictionary *)dictionary;
 
+
+/**
+ *  清除缓存
+ */
+- (void)clearCaches;
+
 @end

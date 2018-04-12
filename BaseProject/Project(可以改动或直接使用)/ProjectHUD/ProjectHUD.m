@@ -82,7 +82,7 @@
         }
     };
     
-    [mbProgressHUD hideAnimated:YES afterDelay:1.618];
+    [mbProgressHUD hideAnimated:YES afterDelay:0.8];
 }
 
 + (void)showMBProgressHUDToView:(UIView *)view withText:(NSString *)text image:(NSString *)imageName completionHandlerAfterAutohide:(void(^)(void))completionHandler {

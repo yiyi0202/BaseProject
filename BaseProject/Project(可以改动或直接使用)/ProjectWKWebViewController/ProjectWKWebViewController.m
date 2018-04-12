@@ -88,9 +88,7 @@
     // 假设我们 OC 要通过调用 JS 的 shareResult(JS 对象) 方法将分享结果传递给前端
     // 传递多参数可以直接将 JS 对象作为参数传递给前端，这样前端就不必写 shareResult（参数1，参数2，...）这样的方法了，可以直接写 shareResult(JS 对象) 这么个方法告诉我们。其实 JS 对象也是一个指定格式字符串，这里我们写一个方法只需传递一个地点进去就可以转化出 JS 对象
     
-    
     // 获取分享结果
-    
     
     // OC 调用 JS 指定的方法传值给 JS, 构建一个可执行的 JS 字符串, 格式为 : JS 方法名 ({JS 对象})，多个参数构建出的 JS 对象用 {} 包住
     NSString *jsString = [NSString stringWithFormat:@"shareResult({%@})", [self generateJSObjectWithDictionary:dictionary]];

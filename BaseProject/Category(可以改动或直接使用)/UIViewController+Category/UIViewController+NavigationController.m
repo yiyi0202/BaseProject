@@ -22,7 +22,7 @@
 - (void)setEnableSlideBack:(BOOL)enableSlideBack {
     
     objc_setAssociatedObject(self, @"enableSlideBack", @(enableSlideBack), OBJC_ASSOCIATION_RETAIN);
-    
+
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     if (enableSlideBack) {
         
@@ -43,12 +43,12 @@
 
 // 关掉 tabBar 一级界面的侧滑返回, 否则会出 bug
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
-    
+
     if (gestureRecognizer == self.navigationController.interactivePopGestureRecognizer) {
-        
+
         return self.navigationController.viewControllers.count > 1;
     }
-    
+
     return YES;
 }
 

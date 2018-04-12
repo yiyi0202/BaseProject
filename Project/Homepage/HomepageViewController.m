@@ -7,7 +7,7 @@
 //
 
 #import "HomepageViewController.h"
-#import "ServiceViewController.h"
+#import "LoginViewController.h"
 
 @interface HomepageViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -25,6 +25,11 @@
     
     [self initialize];
     [self layoutUI];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -111,7 +116,7 @@
 
 - (void)leftBarButtonItemAction:(UIBarButtonItem *)leftBarButtonItem {
     
-    ServiceViewController *vc = [[ServiceViewController alloc] init];
+    LoginViewController *vc = [[LoginViewController alloc] init];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -120,9 +125,9 @@
     ProjectWKWebViewController *vc = [[ProjectWKWebViewController alloc] init];
     
     // 加载本地文件
-//    vc.filePath = @"test.html";
-//    vc.jsMessageNameArray = @[@"Location", @"Share"];'
-    vc.urlString = @"https://www.zhibo8.cc";
+    vc.filePath = @"index.html";
+    vc.jsMessageNameArray = @[@"Location", @"Share", @"clearCache"];
+//    vc.urlString = @"http://teststore.guoss.cn/";
     [self.navigationController pushViewController:vc animated:YES];
 }
 
@@ -133,7 +138,7 @@
     
     // 导航栏
     self.navigationItem.title = @"首页";
-    self.navigationItem.leftBarButtonItem = [self generateLeftBarButtonItemWithTitle:@"客服"];
+    self.navigationItem.leftBarButtonItem = [self generateLeftBarButtonItemWithTitle:@"登录"];
     self.navigationItem.rightBarButtonItem = [self generateRightBarButtonItemWithTitle:@"简书"];
     
     // view

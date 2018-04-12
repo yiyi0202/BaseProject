@@ -25,10 +25,21 @@
 
     [self.webView addObserver:self forKeyPath:@"title" options:(NSKeyValueObservingOptionNew) context:nil];
     [self.webView addObserver:self forKeyPath:@"estimatedProgress" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:nil];
+    
 }
 
 - (void)dealloc {
-
+    
+    if (!self.viewLoaded) {// tabBar 首页设置了一个wk，不走viewDidLoad却会走dealloc，解决移除观察者崩掉的问题
+        
+        return;
+    }
+    
+    if (!self.viewLoaded) {// tabBar 首页设置了一个wk，不走viewDidLoad却会走dealloc，解决移除观察者崩掉的问题
+        
+        return;
+    }
+    
     [self.webView removeObserver:self forKeyPath:@"title"];
     [self.webView removeObserver:self forKeyPath:@"estimatedProgress"];
     
@@ -55,11 +66,17 @@
     
     if ([keyPath isEqualToString:@"estimatedProgress"]) {
         
-        [self.progressView setProgress:[change[@"new"] doubleValue] animated:YES];
-        if ([change[@"new"] doubleValue] == 1.0) {
+        if ([change[@"new"] doubleValue] < 0.1) {
             
-            [self.progressView setProgress:0.0];
-            self.progressView.transform = CGAffineTransformMakeScale(1, 0);
+            [self.progressView setProgress:0.1];
+        }else {
+            
+            [self.progressView setProgress:[change[@"new"] doubleValue] animated:YES];
+            if ([change[@"new"] doubleValue] == 1.0) {
+                
+                [self.progressView setProgress:0.0];
+                self.progressView.transform = CGAffineTransformMakeScale(1, 0);
+            }
         }
     }
 }
@@ -186,18 +203,24 @@
 
 - (void)leftBarButtonItemAction:(UIBarButtonItem *)leftBarButtonItem {
     
-    if ([((UIButton *)leftBarButtonItem).titleLabel.text isEqualToString:@"关闭"]) {
+    if (self.navigationController.viewControllers.count > 1) {
         
-        [self.navigationController popViewControllerAnimated:YES];
-    }else{
-        
-        if (self.webView.canGoBack) {
-            
-            [self.webView goBack];
-        }else {
+        if ([((UIButton *)leftBarButtonItem).titleLabel.text isEqualToString:@"关闭"]) {
             
             [self.navigationController popViewControllerAnimated:YES];
+        }else{
+            
+            if (self.webView.canGoBack) {
+                
+                [self.webView goBack];
+            }else {
+                
+                [self.navigationController popViewControllerAnimated:YES];
+            }
         }
+    }else {
+        
+        [super leftBarButtonItemAction:leftBarButtonItem];
     }
 }
 
@@ -213,31 +236,32 @@
 
 - (void)layoutUI {
     
-    // 导航栏
-    UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
-    [backButton setTitle:@"返回" forState:(UIControlStateNormal)];
-    [backButton setImage:[UIImage imageNamed:@"NavigationBarBackArrow"] forState:(UIControlStateNormal)];
-    [backButton layoutImageAndTitle:(ImageAndTitleLayoutStyleImageLeftToLabel) imageTitleSpace:2];
-    [backButton.titleLabel setFont:[UIFont systemFontOfSize:17.0]];
-    [backButton setTitleColor:self.navigationController.navigationBar.tintColor forState:(UIControlStateNormal)];
-    [backButton setAdjustsImageWhenHighlighted:NO];
-    UIBarButtonItem *backItem = [self generateLeftBarButtonItemWithCustomView:backButton];
-    
-    UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
-    [closeButton setTitle:@"关闭" forState:(UIControlStateNormal)];
-    [closeButton.titleLabel setFont:[UIFont systemFontOfSize:17.0]];
-    [closeButton setTitleColor:self.navigationController.navigationBar.tintColor forState:(UIControlStateNormal)];
-    [closeButton setAdjustsImageWhenHighlighted:NO];
-    UIBarButtonItem *closeItem = [self generateLeftBarButtonItemWithCustomView:closeButton];
-    
-    self.navigationItem.leftBarButtonItems = @[backItem, closeItem];
+    if (self.navigationController.viewControllers.count > 1) {
+        
+        // 导航栏
+        UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+        [backButton setTitle:@"返回" forState:(UIControlStateNormal)];
+        [backButton setImage:[UIImage imageNamed:@"NavigationBarBackArrow"] forState:(UIControlStateNormal)];
+        [backButton layoutImageAndTitle:(ImageAndTitleLayoutStyleImageLeftToLabel) imageTitleSpace:5];
+        [backButton.titleLabel setFont:[UIFont systemFontOfSize:17.0]];
+        [backButton setTitleColor:self.navigationController.navigationBar.tintColor forState:(UIControlStateNormal)];
+        [backButton setAdjustsImageWhenHighlighted:NO];
+        UIBarButtonItem *backItem = [self generateLeftBarButtonItemWithCustomView:backButton];
+        
+        UIButton *closeButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 30)];
+        [closeButton setTitle:@"关闭" forState:(UIControlStateNormal)];
+        [closeButton.titleLabel setFont:[UIFont systemFontOfSize:17.0]];
+        [closeButton setTitleColor:self.navigationController.navigationBar.tintColor forState:(UIControlStateNormal)];
+        [closeButton setAdjustsImageWhenHighlighted:NO];
+        UIBarButtonItem *closeItem = [self generateLeftBarButtonItemWithCustomView:closeButton];
+        
+        self.navigationItem.leftBarButtonItems = @[backItem, closeItem];
+    }
     
     // view
     [self.view addSubview:self.webView];
     [self.view addSubview:self.progressView];
     self.webView.frame = CGRectMake(0, kNavigationBarHeight, kScreenWidth, kScreenHeight - kNavigationBarHeight);
-    self.progressView.frame = CGRectMake(0, kNavigationBarHeight, kScreenWidth, 2.0);
-    self.progressView.transform = CGAffineTransformMakeScale(1, 2);
 }
 
 
@@ -318,6 +342,9 @@
     if (_progressView == nil) {
         
         _progressView = [[UIProgressView alloc] init];
+        _progressView.frame = CGRectMake(0, kNavigationBarHeight, kScreenWidth, 2.0);
+        _progressView.transform = CGAffineTransformMakeScale(1, 2);
+        [_progressView setProgress:0.1];
         
         _progressView.trackTintColor = kVCBackgroundColor;
         _progressView.progressTintColor = [UIColor colorWithRed:70 / 255.0 green:185 / 255.0 blue:66 / 255.0 alpha:1];

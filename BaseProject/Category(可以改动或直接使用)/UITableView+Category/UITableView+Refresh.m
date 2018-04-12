@@ -98,6 +98,7 @@
 - (void)yy_endRefreshingHeader {
     
     [self.mj_header endRefreshing];
+    [self.mj_footer endRefreshing];
 }
 
 - (void)yy_refreshHeader {

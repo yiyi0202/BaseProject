@@ -9,6 +9,7 @@
 #ifndef NSString_Category_h
 #define NSString_Category_h
 
+#import "NSString+Money.h"
 #import "NSString+Regex.h"
 #import "NSString+Encrypt.h"
 #import "NSString+AttributeString.h"

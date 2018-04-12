@@ -13,5 +13,7 @@
 @interface NSString (Encrypt)
 
 - (NSString *)yy_md5Encode;
+- (NSString *)yy_sha1Encode;
+- (NSString *)yy_md5_sha1;
 
 @end

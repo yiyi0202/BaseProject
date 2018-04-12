@@ -21,13 +21,7 @@
 static BaseRequest *request = nil;
 + (instancetype)sharedRequest {
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        
-        request = [[BaseRequest alloc] init];
-    });
-    
-    return request;
+    return [[[self class] alloc] init];
 }
 
 
@@ -40,7 +34,7 @@ static BaseRequest *request = nil;
         UILabel *notReachableLabel = [[UILabel alloc] init];
         notReachableLabel.backgroundColor = [UIColor blackColor];
         notReachableLabel.alpha = 0.618;
-        notReachableLabel.text = @"是你网络有问题吧大叔!";
+        notReachableLabel.text = @"好像断网了！";
         notReachableLabel.textColor = [UIColor whiteColor];
         notReachableLabel.textAlignment = NSTextAlignmentCenter;
         
@@ -165,7 +159,6 @@ static BaseRequest *request = nil;
         targetParams = [params copy];
     }
     
-    
     [self.httpSessionManager POST:urlString parameters:targetParams progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         
         if ([self respondsToSelector:@selector(preHandleRawData:formatData:error:)]) {
@@ -201,6 +194,15 @@ static BaseRequest *request = nil;
        success:(void (^)(NSURLSessionDataTask *task, id responseObject))success
        failure:(void (^)(NSURLSessionDataTask *task, NSError *error))failure {
     
+    NSDictionary *targetParams = nil;
+    if ([self respondsToSelector:@selector(handleParams:targetParams:)]) {
+        
+        [self handleParams:params targetParams:&targetParams];
+    }else {
+        
+        targetParams = [params copy];
+    }
+    
     // 在网络开发中, 上传文件时不允许文件重名, 所以这里采用当前系统时间为文件名
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     dateFormatter.dateFormat = @"yyyyMMddHHmmss";
@@ -216,53 +218,53 @@ static BaseRequest *request = nil;
         fileName = [NSString stringWithFormat:@"%@.mp4", fileName];
     }
     
-    
-    NSDictionary *targetParams = nil;
-    if ([self respondsToSelector:@selector(handleParams:targetParams:)]) {
-        
-        [self handleParams:params targetParams:&targetParams];
-    }else {
-        
-        targetParams = [params copy];
-    }
-    
-    
-    [self.httpSessionManager POST:urlString parameters:targetParams constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:urlString parameters:targetParams constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
         [formData appendPartWithFileData:data name:serverColumn fileName:fileName mimeType:mimeType];
-    } progress:^(NSProgress * _Nonnull uploadProgress) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            // 上传进度
-            // int64_t uploadProgress.totalUnitCount 上传文件的总大小
-            // int64_t uploadProgress.completedUnitCount 当前已上传的大小
-            progress([NSString stringWithFormat:@"%.1f%%", 1.0 * uploadProgress.completedUnitCount / uploadProgress.totalUnitCount * 100]);
-        });
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        if ([self respondsToSelector:@selector(preHandleRawData:formatData:error:)]) {
-            
-            id formatData = nil;
-            NSError *error = nil;
-            
-            [self preHandleRawData:responseObject formatData:&formatData error:&error];
-            
-            if (error) {
-                
-                failure(task, error);
-            }else {
-                
-                success(task, formatData);
-            }
-        }else {
-            
-            success(task, responseObject);
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
-        failure(task, error);
-    }];
+    } error:nil];
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionUploadTask *uploadTask = [manager
+                                          uploadTaskWithStreamedRequest:request
+                                          progress:^(NSProgress * _Nonnull uploadProgress) {
+                                              
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  
+                                                  // 上传进度
+                                                  // int64_t uploadProgress.totalUnitCount 上传文件的总大小
+                                                  // int64_t uploadProgress.completedUnitCount 当前已上传的大小
+                                                  progress([NSString stringWithFormat:@"%.1f%%", 1.0 * uploadProgress.completedUnitCount / uploadProgress.totalUnitCount * 100]);
+                                              });
+                                          }
+                                          completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                                              
+                                              if (!error) {
+                                                  
+                                                  if ([self respondsToSelector:@selector(preHandleRawData:formatData:error:)]) {
+                                                      
+                                                      id formatData = nil;
+                                                      NSError *error = nil;
+                                                      
+                                                      [self preHandleRawData:responseObject formatData:&formatData error:&error];
+                                                      
+                                                      if (error) {
+                                                          
+                                                          failure(nil, error);
+                                                      }else {
+                                                          
+                                                          success(nil, formatData);
+                                                      }
+                                                  }else {
+                                                      
+                                                      success(nil, responseObject);
+                                                  }
+                                              } else {
+                                                  
+                                                  failure(nil, error);
+                                              }
+                                          }];
+    
+    [uploadTask resume];
 }
 
 - (void)upload:(NSString *)urlString
@@ -283,8 +285,7 @@ static BaseRequest *request = nil;
         targetParams = [params copy];
     }
     
-    
-    [self.httpSessionManager POST:urlString parameters:targetParams constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+    NSMutableURLRequest *request = [[AFHTTPRequestSerializer serializer] multipartFormRequestWithMethod:@"POST" URLString:urlString parameters:targetParams constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
         
         for (int i = 0; i < datas.count; i ++) {
             
@@ -305,39 +306,50 @@ static BaseRequest *request = nil;
             
             [formData appendPartWithFileData:datas[i] name:serverColumn fileName:fileName mimeType:mimeTypes[i]];
         }
-    } progress:^(NSProgress * _Nonnull uploadProgress) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            // 上传进度
-            // int64_t uploadProgress.totalUnitCount 上传文件的总大小
-            // int64_t uploadProgress.completedUnitCount 当前已上传的大小
-            progress([NSString stringWithFormat:@"%.1f%%", 1.0 * uploadProgress.completedUnitCount / uploadProgress.totalUnitCount * 100]);
-        });
-    } success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-        
-        if ([self respondsToSelector:@selector(preHandleRawData:formatData:error:)]) {
-            
-            id formatData = nil;
-            NSError *error = nil;
-            
-            [self preHandleRawData:responseObject formatData:&formatData error:&error];
-            
-            if (error) {
-                
-                failure(task, error);
-            }else {
-                
-                success(task, formatData);
-            }
-        }else {
-            
-            success(task, responseObject);
-        }
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
-        failure(task, error);
-    }];
+    } error:nil];
+    AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
+    
+    NSURLSessionUploadTask *uploadTask = [manager
+                                          uploadTaskWithStreamedRequest:request
+                                          progress:^(NSProgress * _Nonnull uploadProgress) {
+                                              
+                                              dispatch_async(dispatch_get_main_queue(), ^{
+                                                  
+                                                  // 上传进度
+                                                  // int64_t uploadProgress.totalUnitCount 上传文件的总大小
+                                                  // int64_t uploadProgress.completedUnitCount 当前已上传的大小
+                                                  progress([NSString stringWithFormat:@"%.1f%%", 1.0 * uploadProgress.completedUnitCount / uploadProgress.totalUnitCount * 100]);
+                                              });
+                                          }
+                                          completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
+                                              
+                                              if (!error) {
+                                                  
+                                                  if ([self respondsToSelector:@selector(preHandleRawData:formatData:error:)]) {
+                                                      
+                                                      id formatData = nil;
+                                                      NSError *error = nil;
+                                                      
+                                                      [self preHandleRawData:responseObject formatData:&formatData error:&error];
+                                                      
+                                                      if (error) {
+                                                          
+                                                          failure(nil, error);
+                                                      }else {
+                                                          
+                                                          success(nil, formatData);
+                                                      }
+                                                  }else {
+                                                      
+                                                      success(nil, responseObject);
+                                                  }
+                                              } else {
+                                                  
+                                                  failure(nil, error);
+                                              }
+                                          }];
+    
+    [uploadTask resume];
 }
 
 
@@ -347,7 +359,7 @@ static BaseRequest *request = nil;
     
     if (_httpSessionManager == nil) {
         
-        _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:kDomainName] sessionConfiguration:[NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"backgroundDownloadIdentifier"]];
+        _httpSessionManager = [[AFHTTPSessionManager alloc] initWithBaseURL:[NSURL URLWithString:kDomainName] sessionConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration]];
         
         _httpSessionManager.requestSerializer = [AFHTTPRequestSerializer serializer];// 请求序列化器
         _httpSessionManager.requestSerializer.timeoutInterval = 11;// 请求超时时长
