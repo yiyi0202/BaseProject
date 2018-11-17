@@ -46,7 +46,7 @@
 
     [self setNeedsStatusBarAppearanceUpdate];
     CGFloat offsetY = scrollView.contentOffset.y;
-    self.scrollScale = (offsetY - kNavigationBarHeight) / kNavigationBarHeight;// 滑动一个导航栏的距离开始显示, 再滑动一个导航栏的距离就全部显示出来
+    self.scrollScale = (offsetY - Navigation_Bar_Height) / Navigation_Bar_Height;// 滑动一个导航栏的距离开始显示, 再滑动一个导航栏的距离就全部显示出来
     
     if (self.scrollScale < 0) {
         
@@ -99,15 +99,15 @@
     UIView *someAlertView = [[UIView alloc] init];
     someAlertView.backgroundColor = [UIColor magentaColor];
     
-    ProjectMaskView *maskView = [ProjectMaskView showToView:kWindow withCustomSubview:someAlertView subviewLayout:^{
+    ProjectMaskView *maskView = [ProjectMaskView showToView:Key_Window withCustomSubview:someAlertView subviewLayout:^{
         
-        someAlertView.frame = CGRectMake(kScreenWidth - 80, kScreenHeight, 50, 180);
-        someAlertView.center = kWindow.center;
+        someAlertView.frame = CGRectMake(Screen_Width - 80, Screen_Height, 50, 180);
+        someAlertView.center = Key_Window.center;
     } subviewAnimation:nil];
     
     maskView.tapBlock = ^{
         
-        [ProjectMaskView hideFromView:kWindow withSubviewAnimation:nil];
+        [ProjectMaskView hideFromView:Key_Window withSubviewAnimation:nil];
     };
 }
 
@@ -117,16 +117,14 @@
 - (void)leftBarButtonItemAction:(UIBarButtonItem *)leftBarButtonItem {
     
     LoginViewController *vc = [[LoginViewController alloc] init];
-    [self.navigationController pushViewController:vc animated:YES];
+    [self.navigationController pushViewController:vc animated:YES];    
 }
 
 - (void)rightBarButtonItemAction:(UIBarButtonItem *)rightBarButtonItem {
     
     ProjectWKWebViewController *vc = [[ProjectWKWebViewController alloc] init];
-    
     // 加载本地文件
     vc.filePath = @"index.html";
-    vc.jsMessageNameArray = @[@"Location", @"Share", @"clearCache"];
 //    vc.urlString = @"http://teststore.guoss.cn/";
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -143,7 +141,7 @@
     
     // view
     [self.view addSubview:self.tableView];
-    self.tableView.frame = CGRectMake(0, 0, kScreenWidth, kScreenHeight - kTabBarHeight);
+    self.tableView.frame = CGRectMake(0, 0, Screen_Width, Screen_Height - Tab_Bar_Height);
 }
 
 
@@ -157,7 +155,7 @@
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        [_tableView yy_Adapt_iOS11];
+        [_tableView yy_AdaptiOS11];
         
         _tableView.tableHeaderView = self.tableHeaderView;
         
@@ -171,7 +169,7 @@
     
     if (!_tableHeaderView) {
         
-        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenWidth / 3.0 * 2.0)];
+        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, Screen_Width / 3.0 * 2.0)];
         _tableHeaderView.backgroundColor = [UIColor clearColor];
         
         UIImageView *tempImageView = [[UIImageView alloc] initWithFrame:_tableHeaderView.frame];

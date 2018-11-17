@@ -9,9 +9,11 @@
                 window.webkit.messageHandlers.ScanAction.postMessage(null);
             }
                 
-            function shareClick() {
+            function callMethod() {
                 
-                window.webkit.messageHandlers.Share.postMessage({title:'测试分享的标题',content:'测试分享的内容',url:'http://m.rblcmall.com/share/openShare.htm?share_uuid=shdfxdfdsfsdfs&share_url=http://m.rblcmall.com/store_index_32787.htm&imagePath=http://c.hiphotos.baidu.com/image/pic/item/f3d3572c11dfa9ec78e256df60d0f703908fc12e.jpg'});
+
+        window.webkit.messageHandlers.callMethod.postMessage([67,205,128,0.5]);
+<!--                window.webkit.messageHandlers.Share.postMessage({title:'测试分享的标题',content:'测试分享的内容',url:'http://m.rblcmall.com/share/openShare.htm?share_uuid=shdfxdfdsfsdfs&share_url=http://m.rblcmall.com/store_index_32787.htm&imagePath=http://c.hiphotos.baidu.com/image/pic/item/f3d3572c11dfa9ec78e256df60d0f703908fc12e.jpg'});-->
             }
             
             function locationClick() {
@@ -79,7 +81,7 @@
         <input type="button" value="扫一扫" onclick="scanClick()" />
         <input type="button" value="获取定位" onclick="locationClick()" />
         <input type="button" value="修改背景色" onclick="colorClick()" />
-        <input type="button" value="分享" onclick="shareClick()" />
+        <input type="button" value="分享" onclick="callMethod()" />
         <input type="button" value="支付" onclick="payClick()" />
         <input type="button" value="摇一摇" onclick="shake()" />
         <input type="button" value="返回" onclick="goBack()" />

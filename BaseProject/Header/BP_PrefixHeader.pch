@@ -1,0 +1,18 @@
+//
+//  BP_PrefixHeader.pch
+//  BaseProject
+//
+//  Created by 意一yiyi on 2018/11/5.
+//  Copyright © 2018 意一yiyi. All rights reserved.
+//
+
+#ifndef BP_PrefixHeader_pch
+#define BP_PrefixHeader_pch
+
+#import "BP_MacroHeader.h"
+#import "BP_BaseHeader.h"
+#import "BP_ProjectHeader.h"
+#import "BP_CategoryHeader.h"
+#import "BP_ThirdHeader.h"
+
+#endif /* BP_PrefixHeader_pch */

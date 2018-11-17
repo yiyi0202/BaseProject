@@ -98,8 +98,7 @@
         _tableView.backgroundColor = [UIColor clearColor];
         _tableView.dataSource = self;
         _tableView.delegate = self;
-        [_tableView yy_Adapt_iOS11];
-
+        [_tableView yy_AdaptiOS11];
         _tableView.tableHeaderView = self.tableHeaderView;
         
         [_tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"cellReuseID"];
@@ -115,8 +114,8 @@
     
     if (!_tableHeaderView) {
         
-        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, 100)];
-        _tableHeaderView.backgroundColor = kThemeColor;
+        _tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, Screen_Width, 100)];
+        _tableHeaderView.backgroundColor = Theme_Color;
         
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
         imageView.center = _tableHeaderView.center;
@@ -153,10 +152,10 @@
     
     // view
     [self.view addSubview:self.tableView];
-    self.tableView.frame = CGRectMake(0, kNavigationBarHeight, kScreenWidth, kScreenHeight - kNavigationBarHeight - kTabBarHeight);
+    self.tableView.frame = CGRectMake(0, Navigation_Bar_Height, Screen_Width, Screen_Height - Navigation_Bar_Height - Tab_Bar_Height);
     
     [self.view addSubview:self.label];
-    self.label.frame = CGRectMake(0, 382, kScreenWidth, 50);
+    self.label.frame = CGRectMake(0, 382, Screen_Width, 50);
 }
 
 

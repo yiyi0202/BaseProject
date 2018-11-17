@@ -34,10 +34,10 @@
     
     [ProjectSocial configureSocialWithSocialType:(ProjectSocialTypeShareSDK)];
     
-    
 #pragma mark - JPush
     
     [ProjectPush configurePushWithLaunchOption:launchOptions apsForProduction:NO];
+    
     
     return YES;
 }

@@ -9,6 +9,6 @@
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch
 
-#import "BaseProjectHeader.h"
+#import "BP_PrefixHeader.pch"
 
 #endif /* PrefixHeader_pch */
